@@ -5,9 +5,6 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  ScrollView,
-  NativeModules,
-  ToastAndroid,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Header from './components/Header';
@@ -23,7 +20,6 @@ let schema = yup.object().shape({
 
 const UserDetails = ({navigation, route}) => {
   const [connectedStatus, setconnectedStatus] = useState(false);
-  const {BluetoothRWModule} = NativeModules;
   let selectedDevice = route.params;
   const formik = useFormik({
     initialValues: {
@@ -54,7 +50,7 @@ const UserDetails = ({navigation, route}) => {
 
   return (
     <>
-      <View style={{backgroundColor: '#fff', padding: 30}}>
+      <View style={{backgroundColor: '#fff', padding: 15}}>
         <Header
           navigation={navigation}
           selectedDevice={selectedDevice}
@@ -92,7 +88,7 @@ const UserDetails = ({navigation, route}) => {
                 <View
                   style={{
                     width: '100%',
-                    paddingHorizontal: 30,
+                    paddingHorizontal: 20,
                     paddingVertical: 20,
                   }}>
                   <Text style={styles.lableInput}>Patient Name</Text>
@@ -112,7 +108,7 @@ const UserDetails = ({navigation, route}) => {
                 <View
                   style={{
                     width: '100%',
-                    paddingHorizontal: 30,
+                    paddingHorizontal: 20,
                     paddingVertical: 20,
                   }}>
                   <Text style={styles.lableInput}>Date</Text>
@@ -175,7 +171,7 @@ const styles = StyleSheet.create({
   Device: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 30,
+    padding: 10,
     paddingTop: 0,
   },
 

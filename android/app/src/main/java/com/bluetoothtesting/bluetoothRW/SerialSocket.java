@@ -1,6 +1,7 @@
 package com.bluetoothtesting.bluetoothRW;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -59,9 +60,14 @@ class SerialSocket implements Runnable {
      * connect-success and most connect-errors are returned asynchronously to listener
      */
     void connect(SerialListener listener) throws IOException {
-        this.listener = listener;
-        context.registerReceiver(disconnectBroadcastReceiver, new IntentFilter(Constants.INTENT_ACTION_DISCONNECT));
-        Executors.newSingleThreadExecutor().submit(this);
+        try {
+            this.listener = listener;
+            context.registerReceiver(disconnectBroadcastReceiver, new IntentFilter(Constants.INTENT_ACTION_DISCONNECT));
+            Executors.newSingleThreadExecutor().submit(this);
+            Log.d(TAG, "connect:Final: Connected");
+        } catch (Exception e) {
+            Log.d(TAG, "connect:Final: "+e.getMessage());
+        }
 
     }
 
@@ -101,29 +107,36 @@ class SerialSocket implements Runnable {
     }
 
     void write(byte[] data, String msg, Promise promise) throws IOException {
-        Log.d(TAG, "write:socket.isConnected() "+socket.isConnected());
+        Log.d(TAG, "write:socket "+socket);
         if (socket != null)
         {
-            if (socket.isConnected()) {
-                try {
-                    WriteValue = msg;
-                    socket.getOutputStream().write(data);
-                    WritableMap params = Arguments.createMap();
-                    params.putString("given_msg", msg);
-                    params.putBoolean("status", true);
-                    params.putString("response", "Data Writed Successfully....");
-                    promise.resolve(params);
+            Log.d(TAG, "write:socket.isConnected() "+socket.isConnected());
+            try {
+                if (socket.isConnected()) {
+                    try {
+                        WriteValue = msg;
+                        socket.getOutputStream().write(data);
+                        WritableMap params = Arguments.createMap();
+                        params.putString("given_msg", msg);
+                        params.putBoolean("status", true);
+                        params.putString("response", "Data Writed Successfully....");
+                        promise.resolve(params);
+                    } catch (Exception e) {
+                        WritableMap params = Arguments.createMap();
+                        params.putString("given_msg", msg);
+                        params.putBoolean("status", false);
+                        params.putString("response", e.getMessage());
+                        promise.resolve(params);
+                    }
                 }
-                catch (Exception e)
-                {
-                    WritableMap params = Arguments.createMap();
-                    params.putString("given_msg", msg);
-                    params.putBoolean("status", false);
-                    params.putString("response", e.getMessage());
-                    promise.resolve(params);
-                }
+            } catch (Exception e) {
+                WritableMap params = Arguments.createMap();
+                params.putString("given_msg", msg);
+                params.putBoolean("status", false);
+                params.putString("response", e.getMessage());
+                promise.resolve(params);
             }
-    }
+        }
             else {
                 WritableMap params = Arguments.createMap();
                 params.putString("given_msg", msg);
@@ -141,15 +154,14 @@ class SerialSocket implements Runnable {
 
 
 
+    @SuppressLint("MissingPermission")
     @Override
     public void run() { // connect & read
         try {
-            if (ActivityCompat.checkSelfPermission(this.context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-
-                return;
-            }
             socket = device.createRfcommSocketToServiceRecord(BLUETOOTH_SPP);
             socket.connect();
+
+
             if(listener != null) {
                 listener.onSerialConnect();
                 SendEventClass send = new SendEventClass();
@@ -158,6 +170,7 @@ class SerialSocket implements Runnable {
                 send.sendObjectEvent("connectionSuccess", params);
             }
         } catch (Exception e) {
+            Log.d(TAG, "run: "+e.getMessage());
             SendEventClass send = new SendEventClass();
             WritableMap params = Arguments.createMap();
             params.putBoolean("connected", false);

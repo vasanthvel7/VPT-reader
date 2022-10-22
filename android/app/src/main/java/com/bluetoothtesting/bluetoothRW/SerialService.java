@@ -80,17 +80,23 @@ public class SerialService extends Service implements SerialListener {
      * Api
      */
     public void connect(SerialSocket socket, Promise promise) throws IOException {
-        socket.connect(this);
 
-        this.socket = socket;
-        connected = true;
+        try {
+            socket.connect(this);
+
+            this.socket = socket;
+            connected = true;
             SendEventClass send = new SendEventClass();
             send.sendEvent("read", "Connected");
             WritableMap params = Arguments.createMap();
             params.putBoolean("status", true);
             promise.resolve(params);
             Log.d(TAG, "connect: Connected");
-//        connected = true;
+        } catch (IOException e) {
+            SendEventClass send = new SendEventClass();
+            send.sendEvent("connectionFailed", e.getMessage());
+            onSerialConnectError(e);
+        }
     }
 
 
@@ -115,7 +121,18 @@ public class SerialService extends Service implements SerialListener {
             promise.resolve(params);
         }
         else {
-            socket.write(data, msg,promise);
+            Log.d(TAG, "write: "+socket);
+            try {
+                socket.write(data, msg, promise);
+            } catch (Exception e) {
+                Log.d(TAG, "write:Test1 "+e.getMessage());
+                WritableMap params = Arguments.createMap();
+                params.putString("given_msg", msg);
+                params.putBoolean("status", false);
+                params.putString("response", e.getMessage());
+                promise.resolve(params);
+
+            }
         }
     }
 

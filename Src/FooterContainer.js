@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import FootImg from './assets/footImg_new.svg';
+import {windowHeight, windowWidth} from './utility';
 
 const FooterContainer = ({
   handleUpdateBorder,
@@ -10,19 +11,27 @@ const FooterContainer = ({
   isDisabled,
   top,
 }) => {
+  const [layout, setLayout] = useState({width: 10, height: 10});
   return (
     <>
-      <FootImg height={400} width={400} />
+      <FootImg
+        height={windowHeight / 2}
+        width={windowWidth}
+        onLayout={event => {
+          console.log(event.nativeEvent.layout);
+          setLayout(event.nativeEvent.layout);
+        }}
+      />
       <View
         style={{
           position: 'absolute',
           top: top,
-          width: '100%',
-          height: 370,
+          width: layout?.width,
+          height: layout?.height,
           display: 'flex',
           flexDirection: 'row',
         }}>
-        <View style={{width: '50%'}}>
+        <View style={{width: layout?.width / 2}}>
           <TouchableOpacity
             onPress={() => {
               handleUpdateBorder(1);
@@ -31,11 +40,11 @@ const FooterContainer = ({
             style={{
               position: 'absolute',
               backgroundColor: '#fff',
-              top: 30,
-              right: 60,
+              top: layout?.height / 6,
+              left: layout?.width / 3.8,
               borderRadius: 30,
-              height: 38,
-              width: 38,
+              height: layout?.height / 11,
+              width: layout?.width / 11,
               alignItems: 'center',
               justifyContent: 'center',
               borderWidth: getBorderWidth(1),
@@ -51,11 +60,11 @@ const FooterContainer = ({
             style={{
               position: 'absolute',
               backgroundColor: '#fff',
-              top: 92,
-              right: 53,
+              top: layout?.height / 3.1,
+              right: layout?.width / 7,
               borderRadius: 30,
-              height: 33,
-              width: 33,
+              height: layout?.height / 12,
+              width: layout?.width / 12,
               alignItems: 'center',
               justifyContent: 'center',
               borderWidth: getBorderWidth(2),
@@ -71,11 +80,11 @@ const FooterContainer = ({
             style={{
               position: 'absolute',
               backgroundColor: '#fff',
-              top: 104,
-              left: 50,
+              top: layout?.height / 2.7,
+              left: layout?.width / 6,
               borderRadius: 30,
-              height: 33,
-              width: 33,
+              height: layout?.height / 12,
+              width: layout?.width / 12,
               alignItems: 'center',
               justifyContent: 'center',
               borderWidth: getBorderWidth(3),
@@ -92,11 +101,11 @@ const FooterContainer = ({
             style={{
               position: 'absolute',
               backgroundColor: '#fff',
-              top: 144,
-              left: 18,
+              top: layout?.height / 2.3,
+              left: layout?.width / 11,
               borderRadius: 30,
-              height: 33,
-              width: 33,
+              height: layout?.height / 12,
+              width: layout?.width / 12,
               alignItems: 'center',
               justifyContent: 'center',
               borderWidth: getBorderWidth(4),
@@ -112,11 +121,11 @@ const FooterContainer = ({
             style={{
               position: 'absolute',
               backgroundColor: '#fff',
-              top: '56%',
-              right: 73,
+              top: layout?.height / 1.9,
+              right: layout?.width / 6,
               borderRadius: 30,
-              height: 38,
-              width: 38,
+              height: layout?.height / 12,
+              width: layout?.width / 12,
               alignItems: 'center',
               justifyContent: 'center',
               borderWidth: getBorderWidth(5),
@@ -132,11 +141,11 @@ const FooterContainer = ({
             style={{
               position: 'absolute',
               backgroundColor: '#fff',
-              bottom: 18,
-              right: 77,
+              bottom: layout?.height / 20,
+              right: layout?.width / 5,
               borderRadius: 30,
-              height: 38,
-              width: 38,
+              height: layout?.height / 12,
+              width: layout?.width / 12,
               alignItems: 'center',
               justifyContent: 'center',
               borderWidth: getBorderWidth(6),
@@ -145,7 +154,7 @@ const FooterContainer = ({
             <Text style={styles.textColor}>{PointerValue?.value_6}</Text>
           </TouchableOpacity>
         </View>
-        <View style={{width: '50%'}}>
+        <View style={{width: layout?.width / 2}}>
           <TouchableOpacity
             onPress={() => {
               handleUpdateBorder(7);
@@ -154,11 +163,11 @@ const FooterContainer = ({
             style={{
               position: 'absolute',
               backgroundColor: '#fff',
-              top: 30,
-              left: 60,
+              top: layout?.height / 6,
+              left: layout?.width / 7,
               borderRadius: 30,
-              height: 38,
-              width: 38,
+              height: layout?.height / 11,
+              width: layout?.width / 11,
               alignItems: 'center',
               justifyContent: 'center',
               borderWidth: getBorderWidth(7),
@@ -174,11 +183,11 @@ const FooterContainer = ({
             style={{
               position: 'absolute',
               backgroundColor: '#fff',
-              top: 92,
-              left: 53,
+              top: layout?.height / 3.1,
+              left: layout?.width / 7,
               borderRadius: 30,
-              height: 33,
-              width: 33,
+              height: layout?.height / 12,
+              width: layout?.width / 12,
               alignItems: 'center',
               justifyContent: 'center',
               borderWidth: getBorderWidth(8),
@@ -194,11 +203,11 @@ const FooterContainer = ({
             style={{
               position: 'absolute',
               backgroundColor: '#fff',
-              top: 104,
-              right: 50,
+              top: layout?.height / 2.7,
+              right: layout?.width / 6,
               borderRadius: 30,
-              height: 33,
-              width: 33,
+              height: layout?.height / 12,
+              width: layout?.width / 12,
               alignItems: 'center',
               justifyContent: 'center',
               borderWidth: getBorderWidth(9),
@@ -215,11 +224,11 @@ const FooterContainer = ({
             style={{
               position: 'absolute',
               backgroundColor: '#fff',
-              top: 144,
-              right: 18,
+              top: layout?.height / 2.3,
+              right: layout?.width / 11,
               borderRadius: 30,
-              height: 33,
-              width: 33,
+              height: layout?.height / 12,
+              width: layout?.width / 12,
               alignItems: 'center',
               justifyContent: 'center',
               borderWidth: getBorderWidth(10),
@@ -235,11 +244,11 @@ const FooterContainer = ({
             style={{
               position: 'absolute',
               backgroundColor: '#fff',
-              top: '56%',
-              left: 73,
+              top: layout?.height / 1.9,
+              left: layout?.width / 6,
               borderRadius: 30,
-              height: 38,
-              width: 38,
+              height: layout?.height / 12,
+              width: layout?.width / 12,
               alignItems: 'center',
               justifyContent: 'center',
               borderWidth: getBorderWidth(11),
@@ -255,11 +264,11 @@ const FooterContainer = ({
             style={{
               position: 'absolute',
               backgroundColor: '#fff',
-              bottom: 18,
-              left: 77,
+              bottom: layout?.height / 20,
+              left: layout?.width / 5,
               borderRadius: 30,
-              height: 38,
-              width: 38,
+              height: layout?.height / 12,
+              width: layout?.width / 12,
               alignItems: 'center',
               justifyContent: 'center',
               borderWidth: getBorderWidth(12),

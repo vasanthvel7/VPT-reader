@@ -25,9 +25,11 @@ const Header = ({
   const [disableRefresh, setdisableRefresh] = useState(true);
   useEffect(() => {
     eventEmitter.addListener('connectionSuccess', event => {
+      console.log(event);
       handleSend('y');
     });
     eventEmitter.addListener('connectionFailed', event => {
+      console.log(event, '===>connectionFailed');
       setconnectedStatus(false);
       setdisableRefresh(true);
     });
@@ -36,7 +38,7 @@ const Header = ({
   const handleSend = value => {
     BluetoothRWModule.writeData(value)
       .then(res => {
-        console.log(res, 'gyaugyuag');
+        console.log(res, '===> writeData');
         if (res.status) {
           setisConnected(true);
           setconnectedStatus(true);
@@ -44,11 +46,12 @@ const Header = ({
           ToastAndroid.show('Please Restart app...', ToastAndroid.SHORT);
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err, 'errr');
+      });
   };
 
   useEffect(() => {
-    console.log(connectedStatus);
     if (!connectedStatus) {
       setTimeout(() => {
         setisConnected(false);
@@ -91,7 +94,7 @@ const Header = ({
                     }
                   })
                   .catch(err => {
-                    console.log(err);
+                    console.log(err, 'err');
                   });
               }}
               style={[styles.connectSec]}>

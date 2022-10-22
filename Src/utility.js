@@ -1,3 +1,5 @@
+import {Dimensions} from 'react-native';
+
 export const ASCIITable = [
   {value: 0, data: '@'},
   {value: 1, data: 'A'},
@@ -51,3 +53,6 @@ export const ASCIITable = [
   {value: 49, data: '1'},
   {value: 50, data: '2'},
 ];
+
+export const windowWidth = Dimensions.get('window').width;
+export const windowHeight = Dimensions.get('window').height;

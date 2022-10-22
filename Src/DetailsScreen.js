@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   NativeEventEmitter,
   NativeModules,
+  ScrollView,
 } from 'react-native';
 import {ASCIITable} from './utility';
 import FooterContainer from './FooterContainer';
@@ -151,59 +152,58 @@ const DetailsScreen = ({navigation, route}) => {
             console.log('connected');
           }}
         />
-
-        <View
-          style={{
-            paddingTop: 20,
-            paddingVertical: 90,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={[
-              styles.headingTitle,
-              {
-                padding: 10,
-                borderColor: 'red',
-                borderWidth: 1,
-                borderRadius: 11,
-              },
-            ]}>
-            Data : {DeviceValue}
-          </Text>
-        </View>
-
-        <View
-          style={{flex: 0.8, justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={styles.headingTitle}>Reading</Text>
-          <FooterContainer
-            handleUpdateBorder={handleUpdateBorder}
-            getBorderWidth={getBorderWidth}
-            getBorderColor={getBorderColor}
-            PointerValue={PointerValue}
-            isDisabled={false}
-            top={-30}
-          />
-
-          <View style={{height: 100, paddingVertical: 50}}>
-            <TouchableOpacity
-              style={styles.submitBtn}
-              onPress={() => {
-                setVisible(true);
-              }}>
-              <Text
-                style={[
-                  {
-                    color: 'black',
-                    fontSize: 13,
-                  },
-                ]}>
-                Submit
-              </Text>
-            </TouchableOpacity>
+        <ScrollView>
+          <View
+            style={{
+              paddingVertical: 20,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text
+              style={[
+                styles.headingTitle,
+                {
+                  padding: 10,
+                  borderColor: 'red',
+                  borderWidth: 1,
+                  borderRadius: 11,
+                },
+              ]}>
+              Data : {DeviceValue}
+            </Text>
           </View>
-        </View>
+
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={styles.headingTitle}>Reading</Text>
+            <FooterContainer
+              handleUpdateBorder={handleUpdateBorder}
+              getBorderWidth={getBorderWidth}
+              getBorderColor={getBorderColor}
+              PointerValue={PointerValue}
+              isDisabled={false}
+              top={0}
+            />
+
+            <View style={{height: 100, paddingVertical: 50}}>
+              <TouchableOpacity
+                style={styles.submitBtn}
+                onPress={() => {
+                  setVisible(true);
+                }}>
+                <Text
+                  style={[
+                    {
+                      color: 'black',
+                      fontSize: 13,
+                    },
+                  ]}>
+                  Submit
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
       </View>
       <VerifyModal
         Visible={Visible}
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
   Device: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 30,
+    padding: 10,
   },
   HeadingSec: {
     flex: 0.06,

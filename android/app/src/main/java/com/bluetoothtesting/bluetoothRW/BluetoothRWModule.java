@@ -24,6 +24,8 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
+import java.io.IOException;
+
 import javax.annotation.Nullable;
 
 
@@ -107,7 +109,8 @@ public class BluetoothRWModule extends ReactContextBaseJavaModule implements  Se
             try {
 
                 SendEventClass send = new SendEventClass();
-                send.sendEvent(DEVICE_READ, "Connecting....");
+                Log.d(TAG, "Connecting.... ");
+                send.sendEvent(DEVICE_READ, "");
                 service.connect(socket, promise);
 
 
@@ -116,16 +119,20 @@ public class BluetoothRWModule extends ReactContextBaseJavaModule implements  Se
             } catch (Exception e) {
                 SendEventClass send = new SendEventClass();
                 send.sendEvent(CONN_FAILED, e.getMessage());
+                Log.d(TAG, "connect:TEST "+e.getMessage());
                 onSerialConnectError(e);
             }
         }
         else {
 
             if(connected == Connected.True) {
-
+                SendEventClass send = new SendEventClass();
                 WritableMap paramsVal = Arguments.createMap();
                 paramsVal.putBoolean("status", true);
                 promise.resolve(paramsVal);
+                WritableMap params = Arguments.createMap();
+                params.putBoolean("connected", true);
+                send.sendObjectEvent("connectionSuccess", params);
             }
         }
     }
@@ -151,7 +158,12 @@ public class BluetoothRWModule extends ReactContextBaseJavaModule implements  Se
                 data = (str + newline).getBytes();
             }
             Log.d(TAG, "writeData: "+service);
-            service.write(data,str,promise);
+            try {
+                service.write(data,str,promise);
+            } catch (Exception e) {
+                Log.d(TAG, "writeData: "+e.getMessage());
+            }
+
 
         } catch (Exception e) {
             promise.reject(e.getMessage());

@@ -22,6 +22,7 @@ export function requestBluetoothPermission() {
         resolve({status: false});
       }
     } catch (err) {
+      console.log(err, '===>err');
       reject(err);
     }
   });

@@ -2,6 +2,7 @@ import {
   FlatList,
   NativeEventEmitter,
   NativeModules,
+  Platform,
   StyleSheet,
   Text,
   ToastAndroid,
@@ -19,25 +20,40 @@ const SerialApp = ({navigation}) => {
   const [deviceStatus, setDeviceStatus] = useState(false);
   const [selectedDevice, setselectedDevice] = useState();
   const [blueToothEnabled, setblueToothEnabled] = useState(false);
+  const [bluetoothupdated, setbluetoothupdated] = useState(false);
 
   const getBluetoothData = useCallback(() => {
-    requestBluetoothPermission().then(res => {
-      console.log(res);
-      if (res.status) {
-        Promise.all([BluetoothSerial.isEnabled(), BluetoothSerial.list()]).then(
-          values => {
+    if (Math.floor(parseFloat(Platform.constants.Release)) <= 11) {
+      Promise.all([BluetoothSerial.isEnabled(), BluetoothSerial.list()]).then(
+        values => {
+          const [isEnabled, devices] = values;
+          setblueToothEnabled(isEnabled);
+          setDeviceList(devices);
+        },
+      );
+    } else {
+      requestBluetoothPermission().then(res => {
+        console.log(res, 'vayayfyuagyu');
+        if (res.status) {
+          Promise.all([
+            BluetoothSerial.isEnabled(),
+            BluetoothSerial.list(),
+          ]).then(values => {
             const [isEnabled, devices] = values;
             setblueToothEnabled(isEnabled);
+
             setDeviceList(devices);
-          },
-        );
-      }
-    });
+          });
+        }
+      });
+    }
   }, []);
 
   useEffect(() => {
-    getBluetoothData();
-  }, []);
+    setTimeout(() => {
+      getBluetoothData();
+    }, 1000);
+  }, [bluetoothupdated]);
 
   const renderDeviceItem = ({item, index}) => {
     return (
@@ -74,16 +90,15 @@ const SerialApp = ({navigation}) => {
         }
       })
       .catch(err => {
-        console.log(err);
+        console.log(err, 'ahuaih');
       });
   };
 
   const handleEnableBlueTooth = () => {
     BluetoothSerial.enable()
       .then(res => {
-        console.log(res);
         getBluetoothData();
-        setblueToothEnabled(true);
+        setbluetoothupdated(!bluetoothupdated);
       })
       .catch(err => {
         console.log(err);

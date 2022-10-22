@@ -77,7 +77,7 @@ const PreviewScreen = ({navigation, route}) => {
             handleUpdateBorder={handleUpdateBorder}
             getBorderColor={getBorderColor}
             PointerValue={selectedDevice?.FooterValues}
-            top={55}
+            top={30}
           />
 
           {/* <View style={{height: 100, paddingVertical: 50}}>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   Device: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 30,
+    padding: 10,
   },
   HeadingSec: {
     flex: 0.06,
